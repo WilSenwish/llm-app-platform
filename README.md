@@ -2,12 +2,13 @@
 
 > 自研通用 LLM 应用运行平台。**RAG 仅作为可插拔插件**，平台统一承载：通用对话、RAG 问答、MCP 工具 Agent、CodeAgent、结构化抽取、多 Agent 编排、离线批量任务。
 
-## 核心差异化亮点（简历 / 面试重点）
+## 项目亮点（简历 / 面试重点）
 
-- **独立 AI 模型网关**：多模型路由、健康探测、故障自动降级、令牌桶限流、SSE 流式透传
-- **全链路 OpenTelemetry 可观测 Harness**：AOP 埋点 + OTEL Collector + Prometheus + Loki + Grafana + AlertManager
-- **限流 / 熔断 / 高可用多实例**：Resilience4j 熔断舱壁隔离（按插件 / 任务类型故障隔离）
-- **压测 & 故障注入演练**：Gatling 混合流量压测 + Chaos 故障注入手册
+- **插件化内核，RAG 只是其中一种能力插件**：基于自研 SPI 插件体系 + 插件注册中心，将通用对话、RAG 问答、MCP 工具 Agent、CodeAgent、结构化抽取、多 Agent 编排、离线批量任务统一承载在同一平台，可热插拔、可独立迭代。
+- **独立 AI 模型网关（自研）**：统一多模型路由、健康探测、故障自动降级、令牌桶限流与 SSE 流式透传，与业务插件彻底解耦。
+- **生产级可观测性（自研 Harness）**：以 Micrometer Observation 为埋点底座，经 OpenTelemetry Collector 统一汇聚至 Prometheus（指标）/ Loki（日志）/ Grafana（大盘）+ AlertManager（告警）。
+- **稳定性工程**：Resilience4j 熔断 + 舱壁隔离（按插件 / 任务类型做故障隔离），支持多实例高可用与异步任务队列削峰。
+- **质量保障闭环**：Gatling 混合流量压测 + Chaos 故障注入演练，形成「压测 → 演练 → 告警 → 复盘」的可靠性闭环。
 
 ## 技术栈
 
@@ -43,8 +44,8 @@ llm-app-platform/
 # 1. 克隆 P0 参考仓库（仅只读参考，不提交）
 mkdir -p refs
 git clone --depth 1 https://gitee.com/nageoffer/ragent.git            refs/ragent
-git clone --depth 1 https://gitee.com/gx729/damai-ai.git              refs/damai-ai
-git clone --depth 1 https://gitee.com/gx729/springai-observability-demo.git refs/springai-observability-demo
+git clone --depth 1 https://gitee.com/java-up-up/damai-ai.git         refs/damai-ai
+git clone --depth 1 https://github.com/913165/springai-Observability-demo.git refs/springai-observability-demo
 git clone --depth 1 https://gitee.com/ageerle/ruoyi-ai.git            refs/ruoyi-ai
 git clone --depth 1 https://gitee.com/gx729/nexus-agent.git           refs/nexus-agent
 
@@ -60,8 +61,8 @@ cd compose && docker compose -f observability-stack.yml up -d
 
 **P0（已规划拉取）**
 - `refs/ragent` — nageoffer/ragent
-- `refs/damai-ai` — gx729/damai-ai（网关逻辑参考）
-- `refs/springai-observability-demo` — gx729（OTEL 埋点样板）
+- `refs/damai-ai` — java-up-up/damai-ai（网关逻辑参考）
+- `refs/springai-observability-demo` — 913165/springai-Observability-demo（OTEL 埋点样板）
 - `refs/ruoyi-ai` — ageerle/ruoyi-ai（MCP、模型管理、流程编排）
 - `refs/nexus-agent` — gx729/nexus-agent（Super-Agent：前置编排、三层执行器、双通道 RAG、证据治理）
 
@@ -83,13 +84,17 @@ cd compose && docker compose -f observability-stack.yml up -d
 | 第7周 | 统一评估平台 + 压测 Harness + 故障注入演练 |
 | 第8周 | 安全加固、文档、面试题库、简历项目描述、Open-WebUI 面试官 Agent |
 
-## 面试关键区分话术
+## 面试关键话术：如何讲清「自研」与「参考」的边界
 
-> Q：项目是不是基于 RuoYi-AI / Super-Agent 改的？
-> A：没有 fork 任何现成平台作为底座，是从零自研的 `llm-app-platform`。
-> - 参考 RuoYi-AI 学习 MCP 协议封装、模型管理、流程编排、后台权限工程实现；
-> - 参考 Nexus-Agent（Super-Agent）吸收企业级 Agent 架构：前置编排、三层执行器、双通道 RAG、证据预算与幻觉治理思想；
-> - 在参考资源之外，独立自研补齐了整套生产底座：独立 AI 模型网关、OpenTelemetry 全链路可观测、Prometheus + Grafana 告警 Harness、多实例高可用、异步任务队列、熔断舱壁隔离。
+> **面试官常问**：这个项目是不是基于 RuoYi-AI / Super-Agent 改的？
+>
+> **回答要点（结论先行）**：核心架构与工程底座是**从零自研**的，开源项目仅作为**技术选型与实现细节的参考**，没有 fork 任何现成平台作为底座。
+>
+> - **RuoYi-AI**：主要参考其 MCP 协议封装、模型管理、流程编排与后台权限的工程实现方式（学习「别人怎么做」）；
+> - **Nexus-Agent（Super-Agent）**：吸收其企业级 Agent 架构思想——前置编排、三层执行器、双通道 RAG、证据预算与幻觉治理；
+> - **自研补齐的生产底座（与其最大的差异点）**：独立 AI 模型网关、OpenTelemetry 全链路可观测、Prometheus + Grafana 告警 Harness、多实例高可用、异步任务队列、熔断舱壁隔离。
+>
+> **一句话总结**：这是一个以「插件化内核 + 生产级稳定性 / 可观测底座」为设计目标的通用 LLM 应用平台，RAG 等能力以可插拔插件形式接入；参考了业界优秀项目的设计与实现，但平台主体为独立自研。
 
 ---
 
