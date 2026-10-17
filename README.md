@@ -72,17 +72,19 @@ cd compose && docker compose -f observability-stack.yml up -d
 
 ## 8 周落地计划概览
 
-| 周次 | 重点 |
-| --- | --- |
-| 第0周 | 目录初始化、拉取 P0 参考仓库、工程骨架、Cursor 上下文 ✅ |
-| 第1周 | 平台内核 + SPI 插件体系 + plugin-rag |
-| 第2周 | 独立 AI 模型网关微服务（gateway-service） |
-| 第3周 | 高可用底座改造 + 异步任务队列（Redis / RabbitMQ / Resilience4j） |
-| 第4周 | 全链路可观测 Harness（OTEL + Prometheus + Loki + Grafana + AlertManager） |
-| 第5周 | plugin-code-agent + plugin-extractor |
-| 第6周 | Workflow 编排引擎 + plugin-multi-agent |
-| 第7周 | 统一评估平台 + 压测 Harness + 故障注入演练 |
-| 第8周 | 安全加固、文档、面试题库、简历项目描述、Open-WebUI 面试官 Agent |
+> 详细路线图（逐周任务 / 交付物 / 状态 / 甘特图）见 **[docs/ROADMAP.md](docs/ROADMAP.md)**。状态：✅ 已完成 · 🔄 进行中 · ⬜ 未开始
+
+| 周次 | 重点 | 优先级 | 状态 |
+| --- | --- | --- | --- |
+| 第0周 | 目录初始化、拉取 P0 参考仓库、工程骨架、Cursor 上下文 | P0 | ✅ 已完成 |
+| 第1周 | 平台内核 + SPI 插件体系 + plugin-rag（前置编排/三层执行器） | P0 | 🔄 进行中 |
+| 第2周 | 独立 AI 模型网关微服务（gateway-service） | P0 | ⬜ 未开始 |
+| 第3周 | 高可用底座改造 + 异步任务队列（Redis / RabbitMQ / Resilience4j） | P0 | ⬜ 未开始 |
+| 第4周 | 全链路可观测 Harness（OTEL + Prometheus + Loki + Grafana + AlertManager） | P0 | ⬜ 未开始 |
+| 第5周 | plugin-code-agent + plugin-extractor | P1 | ⬜ 未开始 |
+| 第6周 | Workflow 编排引擎 + plugin-multi-agent | P1 | ⬜ 未开始 |
+| 第7周 | 统一评估平台 + 压测 Harness + 故障注入演练 | P1 | ⬜ 未开始 |
+| 第8周 | 安全加固、文档、面试题库、简历项目描述、Open-WebUI 面试官 Agent | P0 | ⬜ 未开始 |
 
 ## 面试关键话术：如何讲清「自研」与「参考」的边界
 
@@ -98,4 +100,4 @@ cd compose && docker compose -f observability-stack.yml up -d
 
 ---
 
-当前进度：**第0周（开工前置）** —— 多模块骨架已就绪并通过编译与单元测试；P0 参考仓库拉取与观测栈编排文件生成后完成初始化提交。
+当前进度：**第 0 周已完成，第 1 周进行中** —— 多模块骨架已就绪并通过编译与单元测试；5 个 P0 参考仓库拉取就绪；观测栈编排文件已生成；已推送到 `github.com/WilSenwish/llm-app-platform`（main @ `2d19cd3`）。详细状态见 [docs/ROADMAP.md](docs/ROADMAP.md)。
