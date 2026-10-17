@@ -1,0 +1,22 @@
+# AlertManager 配置（骨架）
+# week4 接入基础设施告警；week7 扩充插件维度告警。
+global:
+  resolve_timeout: 5m
+
+route:
+  receiver: "default"
+  group_by: ["alertname", "instance"]
+  group_wait: 30s
+  group_interval: 5m
+  repeat_interval: 4h
+  routes:
+    - matchers:
+        - severity = "critical"
+      receiver: "default"
+
+receivers:
+  - name: "default"
+    # webhook / 邮件 / 钉钉（week7 P2 可选）在此配置
+    webhook_configs: []
+
+# 告警规则由 Prometheus 侧 rule_files 加载（见 grafana/alerts/ 与 prometheus.yml）

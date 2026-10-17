@@ -1,0 +1,38 @@
+# OpenTelemetry Collector 配置（骨架）
+# 接收 OTLP（gRPC/HTTP），转发指标到 Prometheus，日志/Trace 到 Loki。
+receivers:
+  otlp:
+    protocols:
+      grpc:
+        endpoint: 0.0.0.0:4317
+      http:
+        endpoint: 0.0.0.0:4318
+
+processors:
+  batch: {}
+  # 生产环境补充：resource / attributes / 脱敏等
+
+exporters:
+  prometheus:
+    endpoint: 0.0.0.0:8889
+    # 指标由 Prometheus 抓取，见 prometheus.yml 的 otel-collector scrape 配置
+  loki:
+    endpoint: http://loki:3100/loki/api/v1/push
+    # 结构化日志透传到 Loki（week4 接入应用日志 exporter）
+  debug:
+    verbosity: normal
+
+service:
+  pipelines:
+    traces:
+      receivers: [otlp]
+      processors: [batch]
+      exporters: [debug]
+    metrics:
+      receivers: [otlp]
+      processors: [batch]
+      exporters: [prometheus]
+    logs:
+      receivers: [otlp]
+      processors: [batch]
+      exporters: [loki]

@@ -1,0 +1,20 @@
+# Grafana 数据源自动配置（provisioning，挂载到 /etc/grafana/provisioning/datasources）
+apiVersion: 1
+
+datasources:
+  - name: Prometheus
+    type: prometheus
+    access: proxy
+    url: http://prometheus:9090
+    isDefault: true
+
+  - name: Loki
+    type: loki
+    access: proxy
+    url: http://loki:3100
+
+  - name: OTEL
+    type: tempo
+    access: proxy
+    url: http://otel-collector:4318
+    # 注：Tempo 服务需另行部署；此处预留 Trace 数据源接入点（week4）

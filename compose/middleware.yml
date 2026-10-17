@@ -1,0 +1,117 @@
+# 中间件编排（前置准备 / week3 高可用底座）
+# 镜像来自 Docker Hub；如访问受限，请为 OrbStack 配置国内镜像加速器。
+# 启动：docker compose -f middleware.yml up -d
+# 数据卷统一落在 compose/data/（已在 .gitignore 忽略）
+version: "3.8"
+
+services:
+  mysql:
+    image: mysql:8.0
+    container_name: llm-mysql
+    restart: unless-stopped
+    environment:
+      MYSQL_ROOT_PASSWORD: ${MYSQL_ROOT_PASSWORD:-llmplatform}
+      MYSQL_DATABASE: llm_platform
+      TZ: Asia/Shanghai
+    ports:
+      - "3306:3306"
+    command: --character-set-server=utf8mb4 --collation-server=utf8mb4_unicode_ci
+    volumes:
+      - ./data/mysql:/var/lib/mysql
+    healthcheck:
+      test: ["CMD", "mysqladmin", "ping", "-h", "localhost", "-p${MYSQL_ROOT_PASSWORD:-llmplatform}"]
+      interval: 10s
+      timeout: 5s
+      retries: 10
+
+  redis:
+    image: redis:7-alpine
+    container_name: llm-redis
+    restart: unless-stopped
+    ports:
+      - "6379:6379"
+    volumes:
+      - ./data/redis:/data
+    healthcheck:
+      test: ["CMD", "redis-cli", "ping"]
+      interval: 10s
+      timeout: 5s
+      retries: 10
+
+  rabbitmq:
+    image: rabbitmq:3.13-management
+    container_name: llm-rabbitmq
+    restart: unless-stopped
+    environment:
+      RABBITMQ_DEFAULT_USER: ${RABBITMQ_USER:-llm}
+      RABBITMQ_DEFAULT_PASS: ${RABBITMQ_PASS:-llmplatform}
+    ports:
+      - "5672:5672"
+      - "15672:15672"
+    volumes:
+      - ./data/rabbitmq:/var/lib/rabbitmq
+    healthcheck:
+      test: ["CMD", "rabbitmq-diagnostics", "ping"]
+      interval: 15s
+      timeout: 5s
+      retries: 10
+
+  # ---- Milvus 向量库（standalone：etcd + minio + milvus） ----
+  etcd:
+    image: bitnami/etcd:3.5.14
+    container_name: llm-etcd
+    restart: unless-stopped
+    environment:
+      ETCD_ENABLE_V2: "true"
+      ALLOW_NONE_AUTHENTICATION: "yes"
+      ETCD_AUTO_COMPACTION_MODE: revision
+      ETCD_AUTO_COMPACTION_RETENTION: "1000"
+      ETCD_QUOTA_BACKEND_BYTES: "4294967296"
+    volumes:
+      - ./data/etcd:/bitnami/etcd
+    command: etcd -advertise-client-urls=http://etcd:2379 -listen-client-urls http://0.0.0.0:2379 --data-dir /bitnami/etcd
+
+  minio:
+    image: minio/minio:RELEASE.2024-05-28T17-19-04Z
+    container_name: llm-minio
+    restart: unless-stopped
+    environment:
+      MINIO_ROOT_USER: ${MINIO_USER:-minioadmin}
+      MINIO_ROOT_PASSWORD: ${MINIO_PASS:-minioadmin}
+    command: minio server /data --console-address ":9001"
+    ports:
+      - "9000:9000"
+      - "9001:9001"
+    volumes:
+      - ./data/minio:/data
+
+  milvus:
+    image: milvusdb/milvus:v2.4.13
+    container_name: llm-milvus
+    restart: unless-stopped
+    command: ["milvus", "run", "standalone"]
+    environment:
+      ETCD_ENDPOINTS: etcd:2379
+      MINIO_ADDRESS: minio:9000
+    ports:
+      - "19530:19530"
+    depends_on:
+      - etcd
+      - minio
+    volumes:
+      - ./data/milvus:/var/lib/milvus
+
+  attu:
+    image: zilliz/attu:v2.4.3
+    container_name: llm-attu
+    restart: unless-stopped
+    environment:
+      MILVUS_URL: milvus:19530
+    ports:
+      - "8000:3000"
+    depends_on:
+      - milvus
+
+networks:
+  default:
+    name: llm-platform
