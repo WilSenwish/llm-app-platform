@@ -182,7 +182,7 @@ gantt
 | --- | --- | --- | --- |
 | ragent | P0 | gitee.com/nageoffer/ragent | ✅ 已克隆 |
 | damai-ai | P0 | gitee.com/java-up-up/damai-ai | ✅ 已克隆 |
-| springai-observability-demo | P0 | github.com/913165/springai-Observability-demo | ✅ 已克隆 |
+| springai-observability-demo | P0 | github.com/913165/springai-Observability-demo | ⬜ 已评估，未保留（Brave/Zipkin 与本项目 OTEL 栈不符） |
 | ruoyi-ai | P0 | gitee.com/ageerle/ruoyi-ai | ✅ 已克隆 |
 | nexus-agent | P0 | gitee.com/gx729/nexus-agent | ✅ 已克隆 |
 | langchain4j-examples | P1 | gitee.com/gx729/langchain4j-examples | ⬜ 待拉取（401 私有，需凭证） |
