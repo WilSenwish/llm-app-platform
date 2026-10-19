@@ -70,6 +70,14 @@ cd compose && docker compose -f observability-stack.yml up -d
 - `refs/langchain4j-examples`（P1）
 - `refs/springai-samples`（P2）
 
+**补充参考（Spring AI Alibaba 生态，对应 Week5–7：CodeAgent / 多 Agent 编排 / 评估）**
+> 以下 5 个为后续补充的只读参考，均基于 Spring AI Alibaba（Java 17 / Spring Boot 3.x / Spring AI 1.x），与本项目技术栈一致，可作为 Week5–7 插件实现的样板：
+- `refs/AssistantAgent-main` — Spring AI Alibaba **AssistantAgent**：Code-as-Action（代码生成 + GraalVM 沙箱执行）、多维评估图（Evaluation Graph）、动态 Prompt 构建、统一经验/Skill 体系 → 对应 plugin-code-agent、week7 评估
+- `refs/deepresearch-main` — Spring AI Alibaba **DeepResearch**：基于 Spring AI Alibaba Graph 的 Multi-Agent 研究 Agent，Plan&Execute、Hybrid RAG（向量+关键词）、Reflection、HITL、自进化 Memory、MCP 分配、安全沙箱 → 对应 plugin-multi-agent、week5 沙箱
+- `refs/Lynxe-main` — Spring AI Alibaba **Lynxe**（原 JManus）：纯 Java 版 Manus，确定性探索型任务、HTTP 服务调用、可嵌入现有项目 → 对应 plugin-multi-agent / Workflow 编排（week6）
+- `refs/DataAgent-main` — Spring AI Alibaba **DataAgent**：企业级数据分析师，Text-to-SQL、Python 深度分析、智能报告、MCP Server、RAG 增强 → 对应 plugin-extractor / 数据类插件（week5）
+- `refs/agentscope-examples` — **AgentScope Java** 框架示例集（多 Agent 协作、工具调用等核心特性 Demo）→ 框架级参考（week5/6）
+
 ## 8 周落地计划概览
 
 > 详细路线图（逐周任务 / 交付物 / 状态 / 甘特图）见 **[docs/ROADMAP.md](docs/ROADMAP.md)**。状态：✅ 已完成 · 🔄 进行中 · ⬜ 未开始
@@ -100,4 +108,4 @@ cd compose && docker compose -f observability-stack.yml up -d
 
 ---
 
-当前进度：**第 0 周已完成，第 1 周进行中** —— 多模块骨架已就绪并通过编译与单元测试；5 个 P0 参考仓库拉取就绪；观测栈编排文件已生成；已推送到 `github.com/WilSenwish/llm-app-platform`（main @ `2d19cd3`）。详细状态见 [docs/ROADMAP.md](docs/ROADMAP.md)。
+当前进度：**第 0 周已完成，第 1 周进行中** —— 多模块骨架已就绪并通过编译与单元测试；参考仓库已就位（4 个 P0 克隆 + 5 个 Spring AI Alibaba 生态补充，共 9 个，均只读）；观测栈编排文件已生成；已推送到 `github.com/WilSenwish/llm-app-platform`。详细状态见 [docs/ROADMAP.md](docs/ROADMAP.md)。

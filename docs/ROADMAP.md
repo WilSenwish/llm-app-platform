@@ -46,7 +46,7 @@ gantt
 | 项 | 内容 |
 | --- | --- |
 | 核心任务 | 1) Gitee/GitHub 主仓库 + 多模块 SpringBoot 骨架；2) 本地目录结构；3) 克隆 5 个 P0 参考仓库到 `refs/`；4) OrbStack 预拉容器镜像；5) Ollama 本地模型（qwen3:8b、bge-m3）；6) Open-WebUI 部署；7) Cursor 全局指令配置 |
-| 参考仓库 | ragent、damai-ai、springai-observability-demo、ruoyi-ai、nexus-agent |
+| 参考仓库 | P0：ragent、damai-ai、ruoyi-ai、nexus-agent（springai-observability-demo 已评估未保留）；补充：AssistantAgent / deepresearch / Lynxe / DataAgent / agentscope-examples（Spring AI Alibaba 生态，共 9 个） |
 | 交付物 | ✅ 主仓库初始化；✅ refs 下 P0 参考仓库就绪；✅ 多模块骨架编译+单测通过（commit `c8deee8` → `2d19cd3`）；✅ Cursor 上下文；✅ 观测栈 compose 编排文件生成 |
 | 状态 | **已完成**（2026-10-17） |
 
@@ -105,7 +105,7 @@ gantt
 | 核心思想 | 埋点样板取自 springai-observability-demo；ruoyi/nexus 原生缺完整 OTEL 链路追踪 |
 | P0 任务 | 1) OrbStack 一键观测栈（OTEL Collector + Prometheus + Loki + Grafana + AlertManager）；2) 全局 AOP 埋点切面（系统指标 JVM/容器/HTTP + LLM 指标 token/成功率/耗时/插件维度）；3) 3 套 Grafana 大盘（基础设施 / LLM 全局 / 插件业务）；4) 验证 RAG 任务 Trace+指标+日志完整展示 |
 | P1 任务 | 基础告警规则（实例宕机、P95 延迟、全局错误率） |
-| 参考仓库 | springai-observability-demo |
+| 参考仓库 | 自研 OTEL 栈（`compose/` 已生成，springai-observability-demo 已评估未保留） |
 | 交付物 | 观测栈 compose；AOP 埋点切面；Grafana 大盘 JSON；验证截图 |
 | 状态 | ⬜ 未开始（compose/ 编排文件已生成，待实际启动与埋点开发） |
 
@@ -187,6 +187,16 @@ gantt
 | nexus-agent | P0 | gitee.com/gx729/nexus-agent | ✅ 已克隆 |
 | langchain4j-examples | P1 | gitee.com/gx729/langchain4j-examples | ⬜ 待拉取（401 私有，需凭证） |
 | springai-samples | P2 | gitee.com/gx729/springai-samples | ⬜ 待拉取（401 私有，需凭证） |
+
+**补充参考（Spring AI Alibaba 生态，对应 Week5–7）** — 均为后续补充的本地解压副本（非 git 克隆），技术栈 Java17 / Spring Boot 3.x / Spring AI 1.x：
+
+| 仓库 | 对应周次 | 定位 | 本地状态 |
+| --- | --- | --- | --- |
+| AssistantAgent-main | Week5 / Week7 | Code-as-Action（代码生成+GraalVM 沙箱）、评估图、动态 Prompt、经验/Skill 体系 | ✅ 已就位 |
+| deepresearch-main | Week5 / Week6 | 基于 Spring AI Alibaba Graph 的 Multi-Agent 研究 Agent；Plan&Execute、Hybrid RAG、Reflection、HITL、自进化 Memory、安全沙箱 | ✅ 已就位 |
+| Lynxe-main（原 JManus） | Week6 | 纯 Java 版 Manus，确定性探索任务、HTTP 服务调用、可嵌入 | ✅ 已就位 |
+| DataAgent-main | Week5 | 企业级数据分析师：Text-to-SQL、Python 分析、智能报告、MCP Server | ✅ 已就位 |
+| agentscope-examples | Week5 / Week6 | AgentScope Java 框架示例集（多 Agent / 工具调用 Demo） | ✅ 已就位 |
 
 > `refs/` 全部 `.gitignore` 忽略，仅本地只读参考，不提交主仓库。
 
