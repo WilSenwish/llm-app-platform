@@ -178,6 +178,8 @@ gantt
 
 ## 参考仓库清单与状态
 
+> 各仓库的**学习优先级与逐周阅读路径**见 **[docs/reference-study-guide.md](docs/reference-study-guide.md)**。
+
 | 仓库 | 优先级 | 地址 | 本地状态 |
 | --- | --- | --- | --- |
 | ragent | P0 | gitee.com/nageoffer/ragent | ✅ 已克隆 |

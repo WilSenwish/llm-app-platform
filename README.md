@@ -59,6 +59,8 @@ cd compose && docker compose -f observability-stack.yml up -d
 
 ## 参考仓库（仅只读，不提交主仓库）
 
+> 各仓库的**学习优先级与逐周阅读路径**见 **[docs/reference-study-guide.md](docs/reference-study-guide.md)**。
+
 **P0（已规划拉取）**
 - `refs/ragent` — nageoffer/ragent
 - `refs/damai-ai` — java-up-up/damai-ai（网关逻辑参考）
