@@ -13,12 +13,10 @@
 1. nageoffer/ragent
     `git clone [https://gitee.com/nageoffer/ragent.git](https://gitee.com/nageoffer/ragent.git) ./refs/ragent`
 2. javaup/大麦AI
-    `git clone [https://gitee.com/gx729/damai-ai.git](https://gitee.com/gx729/damai-ai.git) ./refs/damai-ai`
-3. springai-observability-demo
-    `git clone [https://gitee.com/gx729/springai-observability-demo.git](https://gitee.com/gx729/springai-observability-demo.git) ./refs/springai-observability-demo`
-4. RuoYi-AI
+    `git clone [https://gitee.com/java-up-up/damai-ai.git](https://gitee.com/java-up-up/damai-ai.git) ./refs/damai-ai`
+3. RuoYi-AI
     `git clone [https://gitee.com/ageerle/ruoyi-ai.git](https://gitee.com/ageerle/ruoyi-ai.git) ./refs/ruoyi-ai`
-5. Nexus-Agent(Super-Agent)
+4. Nexus-Agent(Super-Agent)
     `git clone [https://gitee.com/gx729/nexus-agent.git](https://gitee.com/gx729/nexus-agent.git) ./refs/nexus-agent`
 
 ### P1 推荐参考仓库（P0完成后按需拉取）
@@ -122,7 +120,7 @@ llm-app-platform/
 ✅ 无状态平台内核；异步任务队列；熔断规则；多实例扩容验证报告
 
 ## 第4周｜P0：全链路可观测Harness（平台全局底座）
-> 埋点样板取自 springai-observability-demo；ruoyi/nexus-agent原生缺少完整OTEL链路追踪，本模块是项目核心加分亮点
+> 埋点采用自研 OTEL 栈 + Spring AI 原生 Micrometer Observation；ruoyi/nexus-agent原生缺少完整OTEL链路追踪，本模块是项目核心加分亮点
 > Cursor任务：生成AOP埋点切面、编写观测栈docker-compose、导出Grafana大盘JSON
 ### 任务 P0
 1. OrbStack一键部署观测栈：OpenTelemetry Collector + Prometheus + Loki + Grafana + AlertManager，写入`compose/`
@@ -210,8 +208,7 @@ llm-app-platform/
 ```bash
 # P0 核心参考仓库
 git clone [https://gitee.com/nageoffer/ragent.git](https://gitee.com/nageoffer/ragent.git) ./refs/ragent
-git clone [https://gitee.com/gx729/damai-ai.git](https://gitee.com/gx729/damai-ai.git) ./refs/damai-ai
-git clone [https://gitee.com/gx729/springai-observability-demo.git](https://gitee.com/gx729/springai-observability-demo.git) ./refs/springai-observability-demo
+git clone [https://gitee.com/java-up-up/damai-ai.git](https://gitee.com/java-up-up/damai-ai.git) ./refs/damai-ai
 git clone [https://gitee.com/ageerle/ruoyi-ai.git](https://gitee.com/ageerle/ruoyi-ai.git) ./refs/ruoyi-ai
 git clone [https://gitee.com/gx729/nexus-agent.git](https://gitee.com/gx729/nexus-agent.git) ./refs/nexus-agent
 
