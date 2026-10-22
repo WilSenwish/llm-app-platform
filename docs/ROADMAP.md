@@ -45,9 +45,9 @@ gantt
 
 | 项 | 内容 |
 | --- | --- |
-| 核心任务 | 1) Gitee/GitHub 主仓库 + 多模块 SpringBoot 骨架；2) 本地目录结构；3) 克隆 5 个 P0 参考仓库到 `refs/`；4) OrbStack 预拉容器镜像；5) Ollama 本地模型（qwen3:8b、bge-m3）；6) Open-WebUI 部署；7) Cursor 全局指令配置 |
+| 核心任务 | 1) Gitee/GitHub 主仓库 + 多模块 SpringBoot 骨架；2) 本地目录结构；3) 克隆 P0 参考仓库到 `refs/`（ragent / damai-ai / ruoyi-ai / nexus-agent；springai-observability-demo 评估后因 Brave/Zipkin 与 OTEL 栈不符未保留）；4) OrbStack 预拉容器镜像；5) Ollama 本地模型（qwen3:8b、bge-m3）；6) Open-WebUI 部署；7) Cursor 全局指令配置 |
 | 参考仓库 | P0：ragent、damai-ai、ruoyi-ai、nexus-agent（springai-observability-demo 已评估未保留）；补充：AssistantAgent / deepresearch / Lynxe / DataAgent / agentscope-examples（Spring AI Alibaba 生态，共 9 个） |
-| 交付物 | ✅ 主仓库初始化；✅ refs 下 P0 参考仓库就绪；✅ 多模块骨架编译+单测通过（commit `c8deee8` → `2d19cd3`）；✅ Cursor 上下文；✅ 观测栈 compose 编排文件生成 |
+| 交付物 | ✅ 主仓库初始化；✅ refs 下 P0 参考仓库就绪（共 9 个，含 5 个补充）；✅ 多模块骨架编译+单测通过（初始提交 `c8deee8`）；✅ Cursor 上下文；✅ 观测栈 compose 编排文件生成 |
 | 状态 | **已完成**（2026-10-17） |
 
 ---
@@ -102,7 +102,7 @@ gantt
 
 | 项 | 内容 |
 | --- | --- |
-| 核心思想 | 埋点样板取自 springai-observability-demo；ruoyi/nexus 原生缺完整 OTEL 链路追踪 |
+| 核心思想 | 埋点采用自研 OTEL 栈 + Spring AI 原生 Micrometer Observation（springai-observability-demo 已评估，因 Brave/Zipkin 与本项目 OTEL 栈不符未保留）；ruoyi/nexus 原生缺完整 OTEL 链路追踪 |
 | P0 任务 | 1) OrbStack 一键观测栈（OTEL Collector + Prometheus + Loki + Grafana + AlertManager）；2) 全局 AOP 埋点切面（系统指标 JVM/容器/HTTP + LLM 指标 token/成功率/耗时/插件维度）；3) 3 套 Grafana 大盘（基础设施 / LLM 全局 / 插件业务）；4) 验证 RAG 任务 Trace+指标+日志完整展示 |
 | P1 任务 | 基础告警规则（实例宕机、P95 延迟、全局错误率） |
 | 参考仓库 | 自研 OTEL 栈（`compose/` 已生成，springai-observability-demo 已评估未保留） |
@@ -202,7 +202,8 @@ gantt
 
 > `refs/` 全部 `.gitignore` 忽略，仅本地只读参考，不提交主仓库。
 
-## 当前进度（截至 2026-10-17）
+## 当前进度（截至 2026-10-22）
 
-- ✅ 第 0 周完成：多模块骨架编译+单测通过、5 个 P0 参考仓库就绪、观测栈 compose 编排文件生成、README/Cursor 上下文就绪、已推送到 `github.com/WilSenwish/llm-app-platform`（main @ `2d19cd3`）。
-- 🔄 第 1 周启动在即：深化 SPI 动态加载（ServiceLoader）、plugin-rag 接向量库检索链路、补架构 Mermaid、写 `docs/tradeoff.md`。
+- ✅ 第 0 周完成：多模块骨架编译+单测通过、9 个参考仓库就绪（4 个 P0 克隆 + 5 个 Spring AI Alibaba 生态补充）、观测栈 compose 编排文件生成、README/Cursor 上下文就绪、已推送到 `github.com/WilSenwish/llm-app-platform`（main）。
+- 🔄 第 1 周进行中：深化 SPI 动态加载（ServiceLoader）、plugin-rag 接向量库检索链路、补架构 Mermaid、写 `docs/tradeoff.md`。
+- 📄 文档资产已补齐：`docs/ROADMAP.md`（详细路线图）、`docs/GITHUB_ABOUT.md`（GitHub 简介与 Topics）、`docs/reference-study-guide.md`（参考仓库学习优先级与逐周阅读路径）。

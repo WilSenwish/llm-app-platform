@@ -61,12 +61,14 @@ cd compose && docker compose -f observability-stack.yml up -d
 
 > 各仓库的**学习优先级与逐周阅读路径**见 **[docs/reference-study-guide.md](docs/reference-study-guide.md)**。
 
-**P0（已规划拉取）**
+**P0（已克隆，本地只读）**
 - `refs/ragent` — nageoffer/ragent
 - `refs/damai-ai` — java-up-up/damai-ai（网关逻辑参考）
-- `refs/springai-observability-demo` — 913165/springai-Observability-demo（已评估：仅验证 Spring AI 原生 Observation，但采用 Brave/Zipkin，与本项目 OTEL 栈不符，未保留本地副本）
 - `refs/ruoyi-ai` — ageerle/ruoyi-ai（MCP、模型管理、流程编排）
 - `refs/nexus-agent` — gx729/nexus-agent（Super-Agent：前置编排、三层执行器、双通道 RAG、证据治理）
+
+**已评估，未保留**
+- `springai-observability-demo`（913165）— 已评估：仅验证 Spring AI 原生 Observation，但其采用 Brave/Zipkin，与本项目 OTEL 栈不符，未保留本地副本
 
 **P1 / P2（按需）**
 - `refs/langchain4j-examples`（P1）
