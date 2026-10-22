@@ -45,7 +45,6 @@ llm-app-platform/
 mkdir -p refs
 git clone --depth 1 https://gitee.com/nageoffer/ragent.git            refs/ragent
 git clone --depth 1 https://gitee.com/java-up-up/damai-ai.git         refs/damai-ai
-# git clone --depth 1 https://github.com/913165/springai-Observability-demo.git refs/springai-observability-demo  # 已评估，与本项目 OTEL 栈不符，未保留
 git clone --depth 1 https://gitee.com/ageerle/ruoyi-ai.git            refs/ruoyi-ai
 git clone --depth 1 https://gitee.com/gx729/nexus-agent.git           refs/nexus-agent
 
@@ -66,9 +65,6 @@ cd compose && docker compose -f observability-stack.yml up -d
 - `refs/damai-ai` — java-up-up/damai-ai（网关逻辑参考）
 - `refs/ruoyi-ai` — ageerle/ruoyi-ai（MCP、模型管理、流程编排）
 - `refs/nexus-agent` — gx729/nexus-agent（Super-Agent：前置编排、三层执行器、双通道 RAG、证据治理）
-
-**已评估，未保留**
-- `springai-observability-demo`（913165）— 已评估：仅验证 Spring AI 原生 Observation，但其采用 Brave/Zipkin，与本项目 OTEL 栈不符，未保留本地副本
 
 **P1 / P2（按需）**
 - `refs/langchain4j-examples`（P1）

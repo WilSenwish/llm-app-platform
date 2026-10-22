@@ -31,8 +31,6 @@
 | `langchain4j-examples` | gx729 | — | 结构化输出参考（**未拉取，401 私有**） | Week5 | ⚪ 待补 |
 | `springai-samples` | gx729 | — | Spring AI 样例（**未拉取，401 私有**） | — | ⚪ 待补 |
 
-> `springai-observability-demo` 已在 2026-10-18 评估后**移除**（Brave/Zipkin 与本项目 OTEL 栈不符，无复用价值）。
-
 ---
 
 ## 2. 阶段 0 · Week1 平台内核（🔴 立即深学）
