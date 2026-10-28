@@ -1,0 +1,26 @@
+server:
+  port: 8080
+
+llm:
+  gateway:
+    api-key: ${LLM_GATEWAY_API_KEY:}
+    global-permits-per-second: 20
+    user-permits-per-second: 5
+    max-attempts: 2
+    model-timeout: 3s
+    endpoints: []
+    # 示例（不要把密钥写进仓库）：
+    # endpoints:
+    #   - id: ollama-local
+    #     provider: ollama
+    #     base-url: http://127.0.0.1:11434
+    #     model: qwen3:8b
+    #   - id: remote-openai
+    #     provider: openai
+    #     base-url: http://127.0.0.1:8088
+    #     model: qwen
+    #     api-key: ${LLM_REMOTE_API_KEY:}
+
+logging:
+  pattern:
+    console: "%d{yyyy-MM-dd'T'HH:mm:ss.SSSXXX} %-5level [%thread] %logger{36} - %msg trace=%X{traceId}%n"

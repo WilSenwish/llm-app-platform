@@ -1,5 +1,6 @@
 package com.llmplatform.core.plugin;
 
+import com.llmplatform.core.model.ModelGateway;
 import io.micrometer.observation.ObservationRegistry;
 import lombok.Getter;
 
@@ -13,10 +14,20 @@ public class DefaultPluginContext implements PluginContext {
     private final String traceId;
     private final String userId;
     private final ObservationRegistry observationRegistry;
+    private final ModelGateway modelGateway;
 
     public DefaultPluginContext(String traceId, String userId, ObservationRegistry observationRegistry) {
+        this(traceId, userId, observationRegistry, null);
+    }
+
+    public DefaultPluginContext(
+            String traceId,
+            String userId,
+            ObservationRegistry observationRegistry,
+            ModelGateway modelGateway) {
         this.traceId = traceId;
         this.userId = userId;
         this.observationRegistry = observationRegistry;
+        this.modelGateway = modelGateway;
     }
 }

@@ -9,8 +9,7 @@ import org.springframework.stereotype.Component;
 
 /**
  * 基于内存的插件注册中心实现（P0）。
- * <p>使用 ConcurrentHashMap 保证并发安全；week1 将扩展为 SPI ServiceLoader 动态加载 / 卸载，
- * 支持运行时热插拔独立插件 jar。
+ * <p>使用 ConcurrentHashMap 保证并发安全。发现与初始化不放在这里，避免注册表兼做加载器。
  */
 @Slf4j
 @Component

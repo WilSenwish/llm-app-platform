@@ -1,11 +1,13 @@
 package com.llmplatform.core.executor;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertFalse;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 
 import com.llmplatform.core.plugin.AppPlugin;
 import com.llmplatform.core.plugin.DefaultPluginContext;
 import com.llmplatform.core.plugin.PluginContext;
+import com.llmplatform.core.plugin.PlatformErrorCodes;
 import com.llmplatform.core.plugin.PluginMetadata;
 import com.llmplatform.core.plugin.PluginRequest;
 import com.llmplatform.core.plugin.PluginResult;
@@ -31,6 +33,20 @@ class PluginExecutorTest {
         assertEquals("done", result.data());
     }
 
+    @Test
+    void executeMapsPluginExceptionToFailure() {
+        ObservationRegistry observationRegistry = ObservationRegistry.create();
+        PluginExecutor executor = new PluginExecutor(observationRegistry);
+
+        PluginResult<?> result = executor.execute(
+                new ThrowingPlugin(),
+                new PluginRequest("trace-1", "user-1", "rag", Map.of()),
+                new PluginContextStub(observationRegistry));
+
+        assertFalse(result.success());
+        assertEquals(PlatformErrorCodes.PLUGIN_EXECUTION_FAILED, result.errorCode());
+    }
+
     /** 测试用上下文：复用默认实现。 */
     static class PluginContextStub extends DefaultPluginContext {
         PluginContextStub(ObservationRegistry registry) {
@@ -52,6 +68,28 @@ class PluginExecutorTest {
         @Override
         public PluginResult<?> execute(PluginRequest r) {
             return PluginResult.success("done");
+        }
+
+        @Override
+        public void destroy() {
+            // no-op
+        }
+    }
+
+    static class ThrowingPlugin implements AppPlugin {
+        @Override
+        public PluginMetadata getMetadata() {
+            return new PluginMetadata("boom", "boom", "1", "boom", PluginType.CUSTOM);
+        }
+
+        @Override
+        public void init(PluginContext context) {
+            // no-op
+        }
+
+        @Override
+        public PluginResult<?> execute(PluginRequest request) {
+            throw new IllegalStateException("plugin blew up");
         }
 
         @Override

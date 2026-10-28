@@ -12,7 +12,7 @@
 
     <artifactId>plugin-rag</artifactId>
     <name>plugin-rag</name>
-    <description>RAG 问答插件（可插拔，独立模块）：文档入库、向量召回、重排、LLM 合成</description>
+    <description>RAG 问答插件（可插拔）。第 1 周为内存哈希检索与抽取式回答；重排和生成式合成后续再接</description>
 
     <dependencies>
         <dependency>

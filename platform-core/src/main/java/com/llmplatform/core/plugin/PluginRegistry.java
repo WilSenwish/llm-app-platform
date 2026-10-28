@@ -6,8 +6,8 @@ import java.util.Optional;
 /**
  * 插件注册中心。
  * <p>管理插件的注册、发现、动态加载与卸载，是平台内核与插件之间的唯一枢纽。
- * <p>P0 提供内存实现；week1 将扩展为基于 SPI（ServiceLoader）的动态加载 / 卸载，
- * 支持运行时热插拔插件包（独立 jar）。
+ * <p>本接口只保存已注册实例。classpath 发现由 {@link SpiPluginLoader} 负责，
+ * 初始化顺序由 {@link PluginLifecycle} 负责。
  */
 public interface PluginRegistry {
 

@@ -27,7 +27,7 @@
 llm-app-platform/
 ├── platform-core/      平台内核：SPI 插件规范、插件注册中心、前置编排与三层执行器（纯底座）
 ├── plugin-rag/         RAG 问答插件（可插拔，独立模块）
-├── gateway-service/    （week2 规划）独立 AI 模型网关微服务
+├── gateway-service/    独立 AI 模型网关：路由、降级、限流、SSE
 ├── refs/               只读参考仓库（.gitignore 忽略，不提交主仓库）
 ├── docs/               架构图、trade-off 决策、故障手册
 ├── compose/            OrbStack docker-compose 编排（中间件 + 观测栈）
@@ -54,6 +54,9 @@ mvn -B clean test
 
 # 3. 启动观测栈（week4 接入；需 OrbStack）
 cd compose && docker compose -f observability-stack.yml up -d
+
+# 4. 启动网关（未配置端点时进程能起来，问答没有模型）
+mvn -pl gateway-service -am spring-boot:run
 ```
 
 ## 参考仓库（仅只读，不提交主仓库）
@@ -86,7 +89,7 @@ cd compose && docker compose -f observability-stack.yml up -d
 | --- | --- | --- | --- |
 | 第0周 | 目录初始化、拉取 P0 参考仓库、工程骨架、Cursor 上下文 | P0 | ✅ 已完成 |
 | 第1周 | 平台内核 + SPI 插件体系 + plugin-rag（前置编排/三层执行器） | P0 | 🔄 进行中 |
-| 第2周 | 独立 AI 模型网关微服务（gateway-service） | P0 | ⬜ 未开始 |
+| 第2周 | 独立 AI 模型网关微服务（gateway-service） | P0 | 🔄 进行中 |
 | 第3周 | 高可用底座改造 + 异步任务队列（Redis / RabbitMQ / Resilience4j） | P0 | ⬜ 未开始 |
 | 第4周 | 全链路可观测 Harness（OTEL + Prometheus + Loki + Grafana + AlertManager） | P0 | ⬜ 未开始 |
 | 第5周 | plugin-code-agent + plugin-extractor | P1 | ⬜ 未开始 |
@@ -108,4 +111,4 @@ cd compose && docker compose -f observability-stack.yml up -d
 
 ---
 
-当前进度：**第 0 周已完成，第 1 周进行中** —— 多模块骨架已就绪并通过编译与单元测试；参考仓库已就位（4 个 P0 克隆 + 5 个 Spring AI Alibaba 生态补充，共 9 个，均只读）；观测栈编排文件已生成；已推送到 `github.com/WilSenwish/llm-app-platform`。详细状态见 [docs/ROADMAP.md](docs/ROADMAP.md)。
+当前进度：**第 0 周已完成，第 1–2 周进行中** —— 内核已走通三层执行器；`gateway-service` 接收 HTTP 任务，RAG 生成走网关，主端点失败会切到备选端点。详细状态见 [docs/ROADMAP.md](docs/ROADMAP.md)，网关结构见 [docs/architecture/week2-model-gateway.md](docs/architecture/week2-model-gateway.md)。

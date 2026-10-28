@@ -23,6 +23,7 @@
     <modules>
         <module>platform-core</module>
         <module>plugin-rag</module>
+        <module>gateway-service</module>
     </modules>
 
     <dependencyManagement>

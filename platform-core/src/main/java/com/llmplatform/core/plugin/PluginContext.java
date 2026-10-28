@@ -1,5 +1,6 @@
 package com.llmplatform.core.plugin;
 
+import com.llmplatform.core.model.ModelGateway;
 import io.micrometer.observation.ObservationRegistry;
 
 /**
@@ -18,6 +19,10 @@ public interface PluginContext {
     /** Micrometer 观测注册中心，插件内部埋点可基于它创建嵌套 Span（全链路可观测）。 */
     ObservationRegistry getObservationRegistry();
 
-    // TODO(week2): ModelGatewayClient getModelGateway();   // 独立 AI 模型网关客户端
+    /**
+     * 模型网关。进程内未装配网关时返回 null，插件应退回不含生成模型的路径。
+     */
+    ModelGateway getModelGateway();
+
     // TODO(week1): McpRegistry getMcpRegistry();           // MCP 工具注册中心
 }

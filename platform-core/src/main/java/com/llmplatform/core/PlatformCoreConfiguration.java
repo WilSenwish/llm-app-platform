@@ -1,5 +1,8 @@
 package com.llmplatform.core;
 
+import io.micrometer.observation.ObservationRegistry;
+import org.springframework.boot.autoconfigure.condition.ConditionalOnMissingBean;
+import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.ComponentScan;
 import org.springframework.context.annotation.Configuration;
 
@@ -11,4 +14,14 @@ import org.springframework.context.annotation.Configuration;
 @Configuration
 @ComponentScan("com.llmplatform.core")
 public class PlatformCoreConfiguration {
+
+    /**
+     * 没有接入 Actuator / OTEL 时提供进程内观测注册中心。
+     * 第 4 周观测栈会提供自己的 {@link ObservationRegistry}，本 Bean 自动让路。
+     */
+    @Bean
+    @ConditionalOnMissingBean(ObservationRegistry.class)
+    public ObservationRegistry observationRegistry() {
+        return ObservationRegistry.create();
+    }
 }

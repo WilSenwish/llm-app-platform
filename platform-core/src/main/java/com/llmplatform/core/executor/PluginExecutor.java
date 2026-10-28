@@ -1,6 +1,7 @@
 package com.llmplatform.core.executor;
 
 import com.llmplatform.core.plugin.AppPlugin;
+import com.llmplatform.core.plugin.PlatformErrorCodes;
 import com.llmplatform.core.plugin.PluginContext;
 import com.llmplatform.core.plugin.PluginRequest;
 import com.llmplatform.core.plugin.PluginResult;
@@ -13,8 +14,7 @@ import org.springframework.stereotype.Component;
  * 插件执行器（前置编排层骨架）。
  * <p>在调用插件前后自动创建 Micrometer Observation Span，落实“新增任何功能优先增加 OTEL 埋点”
  * 的全链路可观测约定。week4 将 Observation 对接 OpenTelemetry Collector，导出 Trace 与指标。
- * <p>三层执行器（前置编排 → 调度 → 执行）中的“执行”入口即在此处，后续将补充
- * 超时控制、重试、熔断（Resilience4j）与舱壁隔离（week3）。
+ * <p>三层执行器（前置编排 → 调度 → 执行）中的执行层。超时、重试、熔断留到第 3 周。
  */
 @Slf4j
 @Component
@@ -44,12 +44,18 @@ public class PluginExecutor {
 
         return observation.observe(() -> {
             log.info("[PluginExecutor] 开始执行插件 pluginId={} taskType={}", pluginId, request.taskType());
-            PluginResult<?> result = plugin.execute(request);
-            observation.highCardinalityKeyValue("plugin.success", String.valueOf(result.success()));
-            if (!result.success()) {
-                observation.highCardinalityKeyValue("plugin.error", result.errorCode());
+            try {
+                PluginResult<?> result = plugin.execute(request);
+                observation.highCardinalityKeyValue("plugin.success", String.valueOf(result.success()));
+                if (!result.success()) {
+                    observation.highCardinalityKeyValue("plugin.error", result.errorCode());
+                }
+                return result;
+            } catch (RuntimeException ex) {
+                observation.error(ex);
+                log.error("[PluginExecutor] 插件执行失败 pluginId={}", pluginId, ex);
+                return PluginResult.failure(PlatformErrorCodes.PLUGIN_EXECUTION_FAILED, ex.getMessage());
             }
-            return result;
         });
     }
 }

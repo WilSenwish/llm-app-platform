@@ -63,7 +63,7 @@ gantt
 | P1 任务 | 编写基础单元测试 |
 | 参考仓库 | nexus-agent、ruoyi-ai、ragent |
 | 交付物 | 多模块平台内核 + SPI 插件体系 + plugin-rag；架构 Mermaid；tradeoff 决策文档 |
-| 状态 | ⬜ 未开始（骨架已就绪，待深化 SPI 动态加载与三层执行器） |
+| 状态 | 🔄 进行中（2026-10-28）。已落地：三层执行器（编排 → 调度 → 执行）、`ServiceLoader` classpath 发现、Spring 实例优先去重、`plugin-rag` 入库/哈希召回/抽取式回答、`docs/tradeoff.md` 与架构图。未做：Milvus、真实 Embedding、生成式回答、运行时热插拔独立 jar |
 
 ---
 
@@ -78,7 +78,7 @@ gantt
 | P1 任务 | 简易 API Key 鉴权 |
 | 参考仓库 | damai-ai、ruoyi-ai |
 | 交付物 | gateway-service 完整模块；网关降级测试用例；网关链路追踪验证 |
-| 状态 | ⬜ 未开始 |
+| 状态 | 🔄 进行中（2026-10-28 代码已落地）。已有：Ollama / OpenAI 兼容双协议、健康探测、超时、有限重试、失败后换端点、全局限流 + 用户限流、API Key、SSE、`gateway.task` / `gateway.model.*` Span、MockMvc 路径「HTTP → 内核 → RAG → 降级模型」。未做：默认测试不连真实 Ollama；RAG 回答本身还不是逐 token SSE；限流不跨进程 |
 
 ---
 
@@ -201,8 +201,9 @@ gantt
 
 > `refs/` 全部 `.gitignore` 忽略，仅本地只读参考，不提交主仓库。
 
-## 当前进度（截至 2026-10-22）
+## 当前进度（截至 2026-10-28）
 
 - ✅ 第 0 周完成：多模块骨架编译+单测通过、9 个参考仓库就绪（4 个 P0 克隆 + 5 个 Spring AI Alibaba 生态补充）、观测栈 compose 编排文件生成、README/Cursor 上下文就绪、已推送到 `github.com/WilSenwish/llm-app-platform`（main）。
-- 🔄 第 1 周进行中：深化 SPI 动态加载（ServiceLoader）、plugin-rag 接向量库检索链路、补架构 Mermaid、写 `docs/tradeoff.md`。
-- 📄 文档资产已补齐：`docs/ROADMAP.md`（详细路线图）、`docs/GITHUB_ABOUT.md`（GitHub 简介与 Topics）、`docs/reference-study-guide.md`（参考仓库学习优先级与逐周阅读路径）。
+- 🔄 第 1 周进行中：三层执行器、SPI 发现与 plugin-rag 内存检索闭环已通过单测。见 [architecture/week1-orchestration-and-rag.md](architecture/week1-orchestration-and-rag.md)。
+- 🔄 第 2 周进行中：模型网关已能把请求送到内核和 RAG，并在主模型失败后改走备选端点。见 [architecture/week2-model-gateway.md](architecture/week2-model-gateway.md) 与 [tradeoff.md](tradeoff.md)。
+- 📄 文档资产已补齐：`docs/ROADMAP.md`、`docs/GITHUB_ABOUT.md`、`docs/reference-study-guide.md`。
