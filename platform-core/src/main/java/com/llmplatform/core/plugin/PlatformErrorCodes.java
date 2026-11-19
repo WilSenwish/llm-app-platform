@@ -18,6 +18,9 @@ public final class PlatformErrorCodes {
     /** 插件执行过程抛出未捕获异常。 */
     public static final String PLUGIN_EXECUTION_FAILED = "PLUGIN_EXECUTION_FAILED";
 
+    /** 熔断打开或舱壁满导致的快速失败（故障隔离层返回）。 */
+    public static final String FAULT_ISOLATED = "FAULT_ISOLATED";
+
     private PlatformErrorCodes() {
     }
 }

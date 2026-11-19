@@ -5,6 +5,8 @@ import org.springframework.boot.autoconfigure.condition.ConditionalOnMissingBean
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.ComponentScan;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.context.annotation.EnableAspectJAutoProxy;
+import org.springframework.context.annotation.Import;
 
 /**
  * 平台内核自动装配。
@@ -13,6 +15,8 @@ import org.springframework.context.annotation.Configuration;
  */
 @Configuration
 @ComponentScan("com.llmplatform.core")
+@EnableAspectJAutoProxy(proxyTargetClass = true)
+@Import(com.llmplatform.core.fault.FaultAutoConfiguration.class)
 public class PlatformCoreConfiguration {
 
     /**
