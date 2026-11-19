@@ -36,6 +36,16 @@
             <groupId>io.github.resilience4j</groupId>
             <artifactId>resilience4j-bulkhead</artifactId>
         </dependency>
+        <!-- Resilience4j ↔ Micrometer 桥接：CB/Bulkhead 自动暴露 Counter/Gauge -->
+        <dependency>
+            <groupId>io.github.resilience4j</groupId>
+            <artifactId>resilience4j-micrometer</artifactId>
+        </dependency>
+        <!-- MeterRegistry：显式 Counter/Timer 指标注册 -->
+        <dependency>
+            <groupId>io.micrometer</groupId>
+            <artifactId>micrometer-core</artifactId>
+        </dependency>
         <!-- Redis 多级缓存：Embedding 缓存、召回结果缓存 -->
         <dependency>
             <groupId>org.springframework.boot</groupId>
