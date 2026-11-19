@@ -1,6 +1,8 @@
 package com.llmplatform.gateway.config;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
+import com.llmplatform.gateway.limit.RateLimiter;
+import com.llmplatform.gateway.limit.RedisTokenBucketRateLimiter;
 import com.llmplatform.gateway.limit.RequestRateLimiter;
 import com.llmplatform.gateway.model.ChatModel;
 import com.llmplatform.gateway.model.ModelCatalog;
@@ -16,10 +18,12 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
+import org.springframework.boot.autoconfigure.condition.ConditionalOnBean;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnMissingBean;
 import org.springframework.boot.web.servlet.FilterRegistrationBean;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.data.redis.core.StringRedisTemplate;
 
 @Configuration
 public class GatewayConfiguration {
@@ -44,8 +48,17 @@ public class GatewayConfiguration {
     }
 
     @Bean
-    public RequestRateLimiter requestRateLimiter(GatewayProperties properties) {
+    @ConditionalOnMissingBean({RateLimiter.class, StringRedisTemplate.class})
+    public RateLimiter inMemoryRateLimiter(GatewayProperties properties) {
         return new RequestRateLimiter(properties.getGlobalPermitsPerSecond(), properties.getUserPermitsPerSecond());
+    }
+
+    @Bean
+    @ConditionalOnBean(StringRedisTemplate.class)
+    @ConditionalOnMissingBean(RateLimiter.class)
+    public RateLimiter redisRateLimiter(StringRedisTemplate redis, GatewayProperties properties) {
+        return new RedisTokenBucketRateLimiter(redis,
+                properties.getGlobalPermitsPerSecond(), properties.getUserPermitsPerSecond());
     }
 
     @Bean(name = "gatewayStreamExecutor", destroyMethod = "shutdown")
@@ -76,7 +89,7 @@ public class GatewayConfiguration {
 
     @Bean
     public FilterRegistrationBean<RateLimitFilter> rateLimitFilter(
-            RequestRateLimiter rateLimiter,
+            RateLimiter rateLimiter,
             ObservationRegistry observationRegistry,
             ObjectMapper objectMapper) {
         FilterRegistrationBean<RateLimitFilter> registration =

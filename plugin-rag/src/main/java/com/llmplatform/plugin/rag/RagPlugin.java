@@ -8,32 +8,58 @@ import com.llmplatform.core.plugin.PluginRequest;
 import com.llmplatform.core.plugin.PluginResult;
 import com.llmplatform.core.plugin.PluginType;
 import com.llmplatform.plugin.rag.answer.IngestResult;
+import com.llmplatform.plugin.rag.embed.HashingEmbeddingModel;
+import com.llmplatform.plugin.rag.ingest.TextChunker;
+import com.llmplatform.plugin.rag.store.InMemoryVectorStore;
+import com.llmplatform.plugin.rag.store.VectorStore;
 import io.micrometer.observation.ObservationRegistry;
+import jakarta.annotation.PostConstruct;
 import java.util.Map;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
 /**
  * RAG 问答插件。
  * <p>提供无参构造，供 {@code ServiceLoader} 发现；Spring 容器同样使用该构造，管道在插件内部装配。
  * 没有模型网关时回答是资料拼接；init 注入网关后，问答改为把资料交给网关生成。
+ * <p>VectorStore 可选注入：有 Redis 时自动切换 {@code RedisSetVectorStore}，否则 fallback 内存实现。
  */
 @Slf4j
 @Component
 public class RagPlugin implements AppPlugin {
 
-    private final RagPipeline pipeline;
+    private RagPipeline pipeline;
     private ObservationRegistry observationRegistry = ObservationRegistry.NOOP;
     private ModelGateway modelGateway;
 
+    /** Spring 容器注入（可选）：有 Redis 时会是 RedisSetVectorStore，否则为 null。 */
+    @Autowired(required = false)
+    private VectorStore vectorStore;
+
     /** SPI 与 Spring 都走这条路径，保证没有容器时也能被加载。 */
     public RagPlugin() {
-        this(new RagPipeline());
+        this.pipeline = new RagPipeline();
     }
 
     /** 测试注入管道，避免每个用例都走默认存储。 */
     public RagPlugin(RagPipeline pipeline) {
         this.pipeline = pipeline;
+    }
+
+    /**
+     * Spring 有 VectorStore（通常是 RedisSetVectorStore）时，用它重建 Pipeline。
+     * 无 VectorStore Bean 时保持默认 InMemoryVectorStore 行为不变。
+     */
+    @PostConstruct
+    void initPipeline() {
+        if (vectorStore != null && !(vectorStore instanceof InMemoryVectorStore)) {
+            this.pipeline = new RagPipeline(
+                    new TextChunker(), new HashingEmbeddingModel(), vectorStore);
+            log.info("[RagPlugin] 使用自定义 VectorStore: {}", vectorStore.getClass().getSimpleName());
+        } else {
+            log.info("[RagPlugin] 使用默认 InMemoryVectorStore");
+        }
     }
 
     @Override

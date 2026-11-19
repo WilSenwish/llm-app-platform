@@ -6,8 +6,9 @@ import java.util.function.LongSupplier;
 
 /**
  * 全局桶 + 用户桶。两边都有余量才放行。桶不跨进程，多实例各自计数。
+ * <p>单实例默认实现。多实例部署应切换 {@link RedisTokenBucketRateLimiter}。
  */
-public final class RequestRateLimiter {
+public final class RequestRateLimiter implements RateLimiter {
 
     static final int MAX_USERS = 4096;
 

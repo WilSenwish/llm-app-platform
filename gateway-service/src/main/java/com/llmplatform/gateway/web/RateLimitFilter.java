@@ -1,7 +1,7 @@
 package com.llmplatform.gateway.web;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
-import com.llmplatform.gateway.limit.RequestRateLimiter;
+import com.llmplatform.gateway.limit.RateLimiter;
 import io.micrometer.observation.Observation;
 import io.micrometer.observation.ObservationRegistry;
 import jakarta.servlet.FilterChain;
@@ -20,12 +20,12 @@ public class RateLimitFilter extends OncePerRequestFilter {
 
     public static final String USER_HEADER = "X-User-Id";
 
-    private final RequestRateLimiter rateLimiter;
+    private final RateLimiter rateLimiter;
     private final ObservationRegistry observationRegistry;
     private final ObjectMapper objectMapper;
 
     public RateLimitFilter(
-            RequestRateLimiter rateLimiter,
+            RateLimiter rateLimiter,
             ObservationRegistry observationRegistry,
             ObjectMapper objectMapper) {
         this.rateLimiter = rateLimiter;

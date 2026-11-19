@@ -9,7 +9,7 @@ import java.util.List;
  * 进程内向量库。同一 docId 再次入库会替换旧块。
  * <p>数据只活在当前插件实例里，重启即丢失，也不能跨进程共享。第 3 周再换 Milvus。
  */
-public final class InMemoryVectorStore {
+public final class InMemoryVectorStore implements VectorStore {
 
     private final List<StoredChunk> chunks = new ArrayList<>();
 

@@ -13,6 +13,7 @@ import com.llmplatform.plugin.rag.ingest.TextChunker;
 import com.llmplatform.plugin.rag.store.InMemoryVectorStore;
 import com.llmplatform.plugin.rag.store.ScoredChunk;
 import com.llmplatform.plugin.rag.store.StoredChunk;
+import com.llmplatform.plugin.rag.store.VectorStore;
 import io.micrometer.observation.Observation;
 import io.micrometer.observation.ObservationRegistry;
 import java.util.ArrayList;
@@ -30,13 +31,13 @@ public final class RagPipeline {
 
     private final TextChunker chunker;
     private final HashingEmbeddingModel embeddingModel;
-    private final InMemoryVectorStore vectorStore;
+    private final VectorStore vectorStore;
 
     public RagPipeline() {
         this(new TextChunker(), new HashingEmbeddingModel(), new InMemoryVectorStore());
     }
 
-    public RagPipeline(TextChunker chunker, HashingEmbeddingModel embeddingModel, InMemoryVectorStore vectorStore) {
+    public RagPipeline(TextChunker chunker, HashingEmbeddingModel embeddingModel, VectorStore vectorStore) {
         this.chunker = chunker;
         this.embeddingModel = embeddingModel;
         this.vectorStore = vectorStore;
