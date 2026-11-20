@@ -61,6 +61,12 @@
             <artifactId>jackson-databind</artifactId>
             <optional>true</optional>
         </dependency>
+        <!-- RabbitMQ 异步任务队列（有 RabbitMQ 时启用，否则 fallback 进程内线程池） -->
+        <dependency>
+            <groupId>org.springframework.boot</groupId>
+            <artifactId>spring-boot-starter-amqp</artifactId>
+            <optional>true</optional>
+        </dependency>
         <dependency>
             <groupId>org.projectlombok</groupId>
             <artifactId>lombok</artifactId>

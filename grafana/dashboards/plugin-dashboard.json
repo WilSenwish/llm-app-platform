@@ -1,0 +1,192 @@
+{
+  "annotations": {
+    "list": [
+      {
+        "builtIn": 1,
+        "datasource": "Prometheus",
+        "enable": true,
+        "hide": true,
+        "type": "grafana"
+      }
+    ]
+  },
+  "description": "llm-app-platform 核心观测大盘",
+  "editable": true,
+  "panels": [
+    {
+      "type": "stat",
+      "title": "RAG 插件调用/分钟",
+      "datasource": "Prometheus",
+      "targets": [
+        {
+          "expr": "rate(llm_plugin_execution_total{plugin_id=\"plugin-rag\", result=\"success\"}[5m]) * 60",
+          "refId": "A"
+        }
+      ],
+      "reduceOptions": {
+        "calcs": [
+          "lastNotNull"
+        ],
+        "fields": "/^Value$/"
+      },
+      "gridPos": {
+        "h": 8,
+        "w": 12,
+        "x": 0,
+        "y": 0
+      }
+    },
+    {
+      "type": "stat",
+      "title": "RAG 熔断状态",
+      "datasource": "Prometheus",
+      "targets": [
+        {
+          "expr": "llm_plugin_circuitbreaker_state{plugin_id=\"plugin-rag\"}",
+          "refId": "A"
+        }
+      ],
+      "reduceOptions": {
+        "calcs": [
+          "lastNotNull"
+        ],
+        "fields": "/^Value$/"
+      },
+      "gridPos": {
+        "h": 8,
+        "w": 12,
+        "x": 12,
+        "y": 0
+      }
+    },
+    {
+      "type": "timeseries",
+      "title": "插件调用量 TopN",
+      "datasource": "Prometheus",
+      "targets": [
+        {
+          "expr": "topk(5, rate(llm_plugin_execution_total[5m]) by (plugin_id))",
+          "refId": "A"
+        }
+      ],
+      "yaxes": [
+        {
+          "format": "short"
+        },
+        {
+          "format": "short"
+        }
+      ],
+      "legend": {
+        "displayMode": "table"
+      },
+      "gridPos": {
+        "h": 8,
+        "w": 12,
+        "x": 0,
+        "y": 8
+      }
+    },
+    {
+      "type": "timeseries",
+      "title": "RAG 检索 vs 入库延迟",
+      "datasource": "Prometheus",
+      "targets": [
+        {
+          "expr": "\n    histogram_quantile(0.95,\n      sum(rate(llm_plugin_latency_seconds_bucket{plugin_id=\"plugin-rag\"}[5m]))\n      by (le, task_type)\n    )\n  ",
+          "refId": "A"
+        }
+      ],
+      "yaxes": [
+        {
+          "format": "s"
+        },
+        {
+          "format": "short"
+        }
+      ],
+      "legend": {
+        "displayMode": "table"
+      },
+      "gridPos": {
+        "h": 8,
+        "w": 12,
+        "x": 12,
+        "y": 8
+      }
+    },
+    {
+      "type": "timeseries",
+      "title": "RAG 熔断事件",
+      "datasource": "Prometheus",
+      "targets": [
+        {
+          "expr": "increase(llm_plugin_circuitbreaker_transitions_total{plugin_id=\"plugin-rag\"}[15m]) by (from, to)",
+          "refId": "A"
+        }
+      ],
+      "yaxes": [
+        {
+          "format": "short"
+        },
+        {
+          "format": "short"
+        }
+      ],
+      "legend": {
+        "displayMode": "table"
+      },
+      "gridPos": {
+        "h": 8,
+        "w": 12,
+        "x": 0,
+        "y": 16
+      }
+    },
+    {
+      "type": "timeseries",
+      "title": "所有插件失败趋势",
+      "datasource": "Prometheus",
+      "targets": [
+        {
+          "expr": "rate(llm_plugin_execution_total{result=\"failed\"}[5m]) by (plugin_id)",
+          "refId": "A"
+        }
+      ],
+      "yaxes": [
+        {
+          "format": "short"
+        },
+        {
+          "format": "short"
+        }
+      ],
+      "legend": {
+        "displayMode": "table"
+      },
+      "gridPos": {
+        "h": 8,
+        "w": 12,
+        "x": 12,
+        "y": 16
+      }
+    }
+  ],
+  "refresh": "10s",
+  "schemaVersion": 39,
+  "tags": [
+    "llm",
+    "grafana-agent"
+  ],
+  "templating": {
+    "list": []
+  },
+  "time": {
+    "from": "now-1h",
+    "to": "now"
+  },
+  "timezone": "browser",
+  "title": "插件业务 · llm-gateway",
+  "uid": "-llm-gateway",
+  "version": 1
+}

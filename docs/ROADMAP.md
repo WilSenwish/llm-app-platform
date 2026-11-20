@@ -82,7 +82,7 @@ gantt
 
 ---
 
-### 第 3 周 · 高可用底座改造 + 异步任务队列（P0）⬜ 未开始
+### 第 3 周 · 高可用底座改造 + 异步任务队列（P0）🔄 进行中
 
 **目标**：平台内核无状态化，引入异步削峰与故障隔离，支撑水平扩容。
 
@@ -92,11 +92,11 @@ gantt
 | P1 任务 | 基础 Gatling 压测脚本（初版） |
 | 参考仓库 | ruoyi-ai、nexus-agent |
 | 交付物 | 无状态内核；异步任务队列；熔断规则；多实例扩容验证报告 |
-| 状态 | ⬜ 未开始 |
+| 状态 | 🔄 代码已落地（Resilience4j 熔断/舱壁 + Redis CacheFacade/RateLimiter/VectorStore 三接口化 + async 异步任务抽象），RabbitMQ broker + 多实例部署需 OrbStack 启动验证 |
 
 ---
 
-### 第 4 周 · 全链路可观测 Harness（P0）⬜ 未开始
+### 第 4 周 · 全链路可观测 Harness（P0）🔄 进行中
 
 **目标**：落地项目核心加分亮点——统一埋点 + 观测栈 + 大盘，覆盖指标/日志/Trace。
 
@@ -107,7 +107,7 @@ gantt
 | P1 任务 | 基础告警规则（实例宕机、P95 延迟、全局错误率） |
 | 参考仓库 | 自研 OTEL 栈（`compose/` 已生成） |
 | 交付物 | 观测栈 compose；AOP 埋点切面；Grafana 大盘 JSON；验证截图 |
-| 状态 | ⬜ 未开始（compose/ 编排文件已生成，待实际启动与埋点开发） |
+| 状态 | 🔄 代码已落地（MeterRegistry Counter/Timer + Resilience4j 事件桥接 + Actuator/Prometheus 导出 + 3 套 Grafana 大盘 JSON），观测栈容器需 OrbStack 启动验证 |
 
 ---
 

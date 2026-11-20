@@ -1,0 +1,294 @@
+{
+  "annotations": {
+    "list": [
+      {
+        "builtIn": 1,
+        "datasource": "Prometheus",
+        "enable": true,
+        "hide": true,
+        "type": "grafana"
+      }
+    ]
+  },
+  "description": "llm-app-platform 核心观测大盘",
+  "editable": true,
+  "panels": [
+    {
+      "type": "stat",
+      "title": "网关总请求/分钟",
+      "datasource": "Prometheus",
+      "targets": [
+        {
+          "expr": "rate(llm_plugin_execution_total{result=\"success\"}[5m]) * 60",
+          "refId": "A"
+        }
+      ],
+      "reduceOptions": {
+        "calcs": [
+          "lastNotNull"
+        ],
+        "fields": "/^Value$/"
+      },
+      "gridPos": {
+        "h": 8,
+        "w": 12,
+        "x": 0,
+        "y": 0
+      }
+    },
+    {
+      "type": "stat",
+      "title": "插件失败率",
+      "datasource": "Prometheus",
+      "targets": [
+        {
+          "expr": "rate(llm_plugin_execution_total{result=~\"failed|isolated\"}[5m]) / rate(llm_plugin_execution_total[5m])",
+          "refId": "A"
+        }
+      ],
+      "reduceOptions": {
+        "calcs": [
+          "lastNotNull"
+        ],
+        "fields": "/^Value$/"
+      },
+      "gridPos": {
+        "h": 8,
+        "w": 12,
+        "x": 12,
+        "y": 0
+      }
+    },
+    {
+      "type": "stat",
+      "title": "熔断拒绝总数",
+      "datasource": "Prometheus",
+      "targets": [
+        {
+          "expr": "sum(rate(llm_plugin_circuitbreaker_rejected_total[5m]))",
+          "refId": "A"
+        }
+      ],
+      "reduceOptions": {
+        "calcs": [
+          "lastNotNull"
+        ],
+        "fields": "/^Value$/"
+      },
+      "gridPos": {
+        "h": 8,
+        "w": 12,
+        "x": 0,
+        "y": 8
+      }
+    },
+    {
+      "type": "stat",
+      "title": "限流拒绝总数",
+      "datasource": "Prometheus",
+      "targets": [
+        {
+          "expr": "sum(rate(llm_gateway_ratelimit_rejected_total[5m]))",
+          "refId": "A"
+        }
+      ],
+      "reduceOptions": {
+        "calcs": [
+          "lastNotNull"
+        ],
+        "fields": "/^Value$/"
+      },
+      "gridPos": {
+        "h": 8,
+        "w": 12,
+        "x": 12,
+        "y": 8
+      }
+    },
+    {
+      "type": "timeseries",
+      "title": "插件执行结果分布",
+      "datasource": "Prometheus",
+      "targets": [
+        {
+          "expr": "rate(llm_plugin_execution_total[5m]) by (plugin_id, result)",
+          "refId": "A"
+        }
+      ],
+      "yaxes": [
+        {
+          "format": "short"
+        },
+        {
+          "format": "short"
+        }
+      ],
+      "legend": {
+        "displayMode": "table"
+      },
+      "gridPos": {
+        "h": 8,
+        "w": 12,
+        "x": 0,
+        "y": 16
+      }
+    },
+    {
+      "type": "timeseries",
+      "title": "插件执行耗时 P95",
+      "datasource": "Prometheus",
+      "targets": [
+        {
+          "expr": "\n    histogram_quantile(0.95, sum(rate(llm_plugin_latency_seconds_bucket[5m])) by (le, plugin_id))\n  ",
+          "refId": "A"
+        }
+      ],
+      "yaxes": [
+        {
+          "format": "s"
+        },
+        {
+          "format": "short"
+        }
+      ],
+      "legend": {
+        "displayMode": "table"
+      },
+      "gridPos": {
+        "h": 8,
+        "w": 12,
+        "x": 12,
+        "y": 16
+      }
+    },
+    {
+      "type": "timeseries",
+      "title": "熔断状态转换",
+      "datasource": "Prometheus",
+      "targets": [
+        {
+          "expr": "increase(llm_plugin_circuitbreaker_transitions_total[10m]) by (plugin_id, from, to)",
+          "refId": "A"
+        }
+      ],
+      "yaxes": [
+        {
+          "format": "short"
+        },
+        {
+          "format": "short"
+        }
+      ],
+      "legend": {
+        "displayMode": "table"
+      },
+      "gridPos": {
+        "h": 8,
+        "w": 12,
+        "x": 0,
+        "y": 24
+      }
+    },
+    {
+      "type": "timeseries",
+      "title": "舱壁拒绝次数",
+      "datasource": "Prometheus",
+      "targets": [
+        {
+          "expr": "increase(llm_plugin_bulkhead_rejected_total[10m]) by (plugin_id)",
+          "refId": "A"
+        }
+      ],
+      "yaxes": [
+        {
+          "format": "short"
+        },
+        {
+          "format": "short"
+        }
+      ],
+      "legend": {
+        "displayMode": "table"
+      },
+      "gridPos": {
+        "h": 8,
+        "w": 12,
+        "x": 12,
+        "y": 24
+      }
+    },
+    {
+      "type": "timeseries",
+      "title": "限流拒绝趋势",
+      "datasource": "Prometheus",
+      "targets": [
+        {
+          "expr": "rate(llm_gateway_ratelimit_rejected_total[5m]) by (user_id)",
+          "refId": "A"
+        }
+      ],
+      "yaxes": [
+        {
+          "format": "short"
+        },
+        {
+          "format": "short"
+        }
+      ],
+      "legend": {
+        "displayMode": "table"
+      },
+      "gridPos": {
+        "h": 8,
+        "w": 12,
+        "x": 0,
+        "y": 32
+      }
+    },
+    {
+      "type": "timeseries",
+      "title": "失败率超限事件",
+      "datasource": "Prometheus",
+      "targets": [
+        {
+          "expr": "increase(llm_plugin_circuitbreaker_failure_rate_exceeded_total[10m]) by (plugin_id)",
+          "refId": "A"
+        }
+      ],
+      "yaxes": [
+        {
+          "format": "short"
+        },
+        {
+          "format": "short"
+        }
+      ],
+      "legend": {
+        "displayMode": "table"
+      },
+      "gridPos": {
+        "h": 8,
+        "w": 12,
+        "x": 12,
+        "y": 32
+      }
+    }
+  ],
+  "refresh": "10s",
+  "schemaVersion": 39,
+  "tags": [
+    "llm",
+    "grafana-agent"
+  ],
+  "templating": {
+    "list": []
+  },
+  "time": {
+    "from": "now-1h",
+    "to": "now"
+  },
+  "timezone": "browser",
+  "title": "LLM 全局 · llm-gateway",
+  "uid": "llm-llm-gateway",
+  "version": 1
+}

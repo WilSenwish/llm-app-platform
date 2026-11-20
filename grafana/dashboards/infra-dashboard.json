@@ -1,0 +1,238 @@
+{
+  "annotations": {
+    "list": [
+      {
+        "builtIn": 1,
+        "datasource": "Prometheus",
+        "enable": true,
+        "hide": true,
+        "type": "grafana"
+      }
+    ]
+  },
+  "description": "llm-app-platform 核心观测大盘",
+  "editable": true,
+  "panels": [
+    {
+      "type": "stat",
+      "title": "JVM 堆内存 (MB)",
+      "datasource": "Prometheus",
+      "targets": [
+        {
+          "expr": "jvm_memory_used_bytes{area=\"heap\"} / 1024 / 1024",
+          "refId": "A"
+        }
+      ],
+      "reduceOptions": {
+        "calcs": [
+          "lastNotNull"
+        ],
+        "fields": "/^Value$/"
+      },
+      "gridPos": {
+        "h": 8,
+        "w": 12,
+        "x": 0,
+        "y": 0
+      }
+    },
+    {
+      "type": "stat",
+      "title": "活跃线程",
+      "datasource": "Prometheus",
+      "targets": [
+        {
+          "expr": "jvm_threads_states_threads{state=\"runnable\"}",
+          "refId": "A"
+        }
+      ],
+      "reduceOptions": {
+        "calcs": [
+          "lastNotNull"
+        ],
+        "fields": "/^Value$/"
+      },
+      "gridPos": {
+        "h": 8,
+        "w": 12,
+        "x": 12,
+        "y": 0
+      }
+    },
+    {
+      "type": "stat",
+      "title": "HTTP 请求 QPS",
+      "datasource": "Prometheus",
+      "targets": [
+        {
+          "expr": "rate(http_server_requests_seconds_count{application=\"llm-gateway\"}[5m])",
+          "refId": "A"
+        }
+      ],
+      "reduceOptions": {
+        "calcs": [
+          "lastNotNull"
+        ],
+        "fields": "/^Value$/"
+      },
+      "gridPos": {
+        "h": 8,
+        "w": 12,
+        "x": 0,
+        "y": 8
+      }
+    },
+    {
+      "type": "stat",
+      "title": "HTTP 5xx 比率",
+      "datasource": "Prometheus",
+      "targets": [
+        {
+          "expr": "rate(http_server_requests_seconds_count{application=\"llm-gateway\", status=~\"5..\"}[5m]) / rate(http_server_requests_seconds_count{application=\"llm-gateway\"}[5m])",
+          "refId": "A"
+        }
+      ],
+      "reduceOptions": {
+        "calcs": [
+          "lastNotNull"
+        ],
+        "fields": "/^Value$/"
+      },
+      "gridPos": {
+        "h": 8,
+        "w": 12,
+        "x": 12,
+        "y": 8
+      }
+    },
+    {
+      "type": "timeseries",
+      "title": "JVM GC Pause",
+      "datasource": "Prometheus",
+      "targets": [
+        {
+          "expr": "rate(jvm_gc_pause_seconds_sum{application=\"llm-gateway\"}[5m])",
+          "refId": "A"
+        }
+      ],
+      "yaxes": [
+        {
+          "format": "short"
+        },
+        {
+          "format": "short"
+        }
+      ],
+      "legend": {
+        "displayMode": "table"
+      },
+      "gridPos": {
+        "h": 8,
+        "w": 12,
+        "x": 0,
+        "y": 16
+      }
+    },
+    {
+      "type": "timeseries",
+      "title": "HTTP 延迟 P95/P99",
+      "datasource": "Prometheus",
+      "targets": [
+        {
+          "expr": "\n    histogram_quantile(0.95, sum(rate(http_server_requests_seconds_bucket{application=\"llm-gateway\"}[5m])) by (le))\n    or\n    histogram_quantile(0.99, sum(rate(http_server_requests_seconds_bucket{application=\"llm-gateway\"}[5m])) by (le))\n  ",
+          "refId": "A"
+        }
+      ],
+      "yaxes": [
+        {
+          "format": "short"
+        },
+        {
+          "format": "short"
+        }
+      ],
+      "legend": {
+        "displayMode": "table"
+      },
+      "gridPos": {
+        "h": 8,
+        "w": 12,
+        "x": 12,
+        "y": 16
+      }
+    },
+    {
+      "type": "timeseries",
+      "title": "CPU 使用率",
+      "datasource": "Prometheus",
+      "targets": [
+        {
+          "expr": "process_cpu_usage{application=\"llm-gateway\"}",
+          "refId": "A"
+        }
+      ],
+      "yaxes": [
+        {
+          "format": "short"
+        },
+        {
+          "format": "short"
+        }
+      ],
+      "legend": {
+        "displayMode": "table"
+      },
+      "gridPos": {
+        "h": 8,
+        "w": 12,
+        "x": 0,
+        "y": 24
+      }
+    },
+    {
+      "type": "timeseries",
+      "title": "HTTP 状态码分布",
+      "datasource": "Prometheus",
+      "targets": [
+        {
+          "expr": "rate(http_server_requests_seconds_count{application=\"llm-gateway\"}[5m]) by (status)",
+          "refId": "A"
+        }
+      ],
+      "yaxes": [
+        {
+          "format": "short"
+        },
+        {
+          "format": "short"
+        }
+      ],
+      "legend": {
+        "displayMode": "table"
+      },
+      "gridPos": {
+        "h": 8,
+        "w": 12,
+        "x": 12,
+        "y": 24
+      }
+    }
+  ],
+  "refresh": "10s",
+  "schemaVersion": 39,
+  "tags": [
+    "llm",
+    "grafana-agent"
+  ],
+  "templating": {
+    "list": []
+  },
+  "time": {
+    "from": "now-1h",
+    "to": "now"
+  },
+  "timezone": "browser",
+  "title": "基础设施 · llm-gateway",
+  "uid": "-llm-gateway",
+  "version": 1
+}

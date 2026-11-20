@@ -1,4 +1,6 @@
-# Prometheus 抓取配置（骨架）
+# Prometheus 抓取配置
+# gateway-service / plugin-rag 暴露 /actuator/prometheus（Spring Boot Actuator + Micrometer）
+# 启动观测栈后需同时启动应用，Prometheus 才能 scrape 到数据
 global:
   scrape_interval: 15s
   evaluation_interval: 15s
@@ -12,11 +14,30 @@ scrape_configs:
     static_configs:
       - targets: ["otel-collector:8889"]
 
-  # 平台服务（gateway-service / platform-core 暴露的 micrometer 端点，week2/3 接入）
-  - job_name: "llm-platform"
+  # 平台服务（默认 Gateway 8080 / Core 8081，host.docker.internal 指向宿主机）
+  # 本地 macOS/Linux Docker Desktop 默认启用 host-gateway，否则改为 127.0.0.1
+  - job_name: "llm-gateway"
     metrics_path: /actuator/prometheus
     static_configs:
       - targets: ["host.docker.internal:8080"]
-    relabel_configs:
-      - source_labels: [__address__]
-        target_label: instance
+        labels:
+          service: "gateway-service"
+  - job_name: "llm-core"
+    metrics_path: /actuator/prometheus
+    static_configs:
+      - targets: ["host.docker.internal:8081"]
+        labels:
+          service: "platform-core"
+
+  # 中间件自带指标
+  - job_name: "redis"
+    static_configs:
+      - targets: ["host.docker.internal:9121"]  # redis_exporter（可选）
+  - job_name: "rabbitmq"
+    metrics_path: /metrics
+    static_configs:
+      - targets: ["host.docker.internal:15672"]  # RabbitMQ 内置 metrics（management_api）
+
+# 告警规则骨架（week7 压测后补充具体规则）
+rule_files:
+  # - "alert-rules.yml"

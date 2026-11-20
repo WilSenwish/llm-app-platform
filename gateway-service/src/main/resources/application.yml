@@ -37,3 +37,24 @@ management:
   metrics:
     tags:
       application: llm-gateway
+
+# ===================== RabbitMQ 异步队列（生产启用） =====================
+# 启用条件：classpath 有 spring-boot-starter-amqp 且 spring.rabbitmq.host 不为空
+# 开发/测试无 RabbitMQ 时自动 fallback InMemoryAsyncTaskProducer
+spring:
+  rabbitmq:
+    host: ${RABBITMQ_HOST:}
+    port: ${RABBITMQ_PORT:5672}
+    username: ${RABBITMQ_USER:llm}
+    password: ${RABBITMQ_PASS:llmplatform}
+    virtual-host: /
+    connection-timeout: 10s
+    listener:
+      simple:
+        ack-mode: manual
+        prefetch: 10
+        retry:
+          enabled: true
+          max-attempts: 3
+          initial-interval: 1000ms
+          multiplier: 2
